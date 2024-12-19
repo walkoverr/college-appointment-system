@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../server");
+const app = require("../index");
 
 describe("E2E Test for College Appointment System", () => {
   it("should register a user", async () => {
