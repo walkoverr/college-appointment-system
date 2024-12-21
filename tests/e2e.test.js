@@ -5,7 +5,7 @@ const {faker} = require('@faker-js/faker')
 let server;
 
 beforeAll(() => {
-  server = app.listen(9000); // Start the server before tests
+  server = app.listen(5001); // Start the server before tests
 });
 
 afterAll(async () => {
