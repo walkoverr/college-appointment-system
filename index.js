@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 const authRoutes = require("./routes/auth");
 const professorRoutes = require("./routes/professor");
 const studentRoutes = require("./routes/student");
-const PORT =5000;
+const PORT =9000;
 dotenv.config();
 
 const app = express();
@@ -29,3 +29,4 @@ app.listen(PORT, () =>{
     console.log(`Server running on port ${PORT}`)
 });
 
+module.exports = app;
