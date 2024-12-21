@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 const authRoutes = require("./routes/auth");
 const professorRoutes = require("./routes/professor");
 const studentRoutes = require("./routes/student");
-const PORT =5001;
+const PORT =3007;
 dotenv.config();
 
 const app = express();
