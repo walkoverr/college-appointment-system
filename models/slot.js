@@ -8,8 +8,8 @@ const SlotSchema = new mongoose.Schema({
     required: true 
   },
   date: 
-  { 
-    type: String, 
+  {  
+    type: String,
     required: true 
 },
   time: 
@@ -23,5 +23,4 @@ const SlotSchema = new mongoose.Schema({
     default: false 
 },
 });
-
 module.exports = mongoose.model("Slot", SlotSchema);
