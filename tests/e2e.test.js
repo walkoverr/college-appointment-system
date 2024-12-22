@@ -7,7 +7,8 @@ let professorToken;
 let studentToken;
 let slotId;
 let appointmentId;
-
+const pfakeEmail = faker.internet.email();
+const sfakeEmail = faker.internet.email();
 beforeAll(() => {
   server = app.listen(3001); // Start the server before tests
 });
@@ -21,10 +22,10 @@ describe("E2E Test for College Appointment System", () => {
   
   // Register a new student
   it("should register a student", async () => {
-    const fakeEmail = faker.internet.email();
-    const res = await request(app).post("/api/auth/register").send({
+   
+    const res = await request(app).post("/auth/register").send({
       name: "Test Student",
-      email: "student123@example.com", // Use a valid student email
+      email: sfakeEmail, // Use a valid student email
       password: "123456",
       role: "student",
     });
@@ -35,10 +36,10 @@ describe("E2E Test for College Appointment System", () => {
 
   // Register a new professor
   it("should register a professor", async () => {
-    const fakeEmail = faker.internet.email();
-    const res = await request(app).post("/api/auth/register").send({
+    
+    const res = await request(app).post("/auth/register").send({
       name: "Test Professor",
-      email: "professor123@example.com", // Use a valid professor email
+      email: pfakeEmail, // Use a valid professor email
       password: "123456",
       role: "professor",
     });
@@ -50,9 +51,9 @@ describe("E2E Test for College Appointment System", () => {
   // Student login
   it("should log in a registered student", async () => {
     const res = await request(app)
-      .post("/api/auth/login")
+      .post("/auth/login")
       .send({
-        email: "student123@example.com", // Use the email from registration
+        email: sfakeEmail, // Use the email from registration
         password: "123456",
       });
     studentToken = res.body.token; // Store student token
@@ -64,9 +65,9 @@ describe("E2E Test for College Appointment System", () => {
   // Professor login
   it("should log in a registered professor", async () => {
     const res = await request(app)
-      .post("/api/auth/login")
+      .post("/auth/login")
       .send({
-        email: "professor123@example.com", // Use the email from registration
+        email: pfakeEmail, // Use the email from registration
         password: "123456",
       });
     professorToken = res.body.token; // Store professor token
@@ -79,7 +80,7 @@ describe("E2E Test for College Appointment System", () => {
   it("should create a new slot for a professor", async () => {
     console.log("Professor Token:", professorToken); 
     const res = await request(app)
-      .post("/api/professor/slots")
+      .post("/professor/slots")
       .set("Authorization", `Bearer ${professorToken}`) // Ensure the token is valid
       .send({
         date: "2024-12-22",
@@ -102,7 +103,7 @@ describe("E2E Test for College Appointment System", () => {
   // Student views available slots
   it("should fetch available slots", async () => {
     const res = await request(app)
-      .get("/api/student/slots")
+      .get("/student/slots")
       .set("Authorization", `Bearer ${studentToken}`);
     expect(res.statusCode).toBe(200);
     expect(res.body.length).toBeGreaterThan(0);
@@ -111,7 +112,7 @@ describe("E2E Test for College Appointment System", () => {
   // Student books an appointment
   it("should allow a student to book an appointment", async () => {
     const res = await request(app)
-      .post("/api/student/book")
+      .post("/student/book")
       .set("Authorization", `Bearer ${studentToken}`)
       .send({
         slotId: slotId, // Use the slotId from the previous test
@@ -124,7 +125,7 @@ describe("E2E Test for College Appointment System", () => {
   // Student views their appointment status
   it("should fetch student appointment status", async () => {
     const res = await request(app)
-      .post("/api/student/status")
+      .post("/student/status")
       .set("Authorization", `Bearer ${studentToken}`);
     expect(res.statusCode).toBe(200);
     expect(res.body.appointments.length).toBeGreaterThan(0);
@@ -133,7 +134,7 @@ describe("E2E Test for College Appointment System", () => {
   // Professor cancels an appointment
   it("should allow a professor to cancel an appointment", async () => {
     const res = await request(app)
-      .delete(`/api/professor/cancel/${appointmentId}`)
+      .delete(`/professor/cancel/${appointmentId}`)
       .set("Authorization", `Bearer ${professorToken}`);
     expect(res.statusCode).toBe(200);
     expect(res.body.message).toBe("Appointment cancelled");
@@ -142,7 +143,7 @@ describe("E2E Test for College Appointment System", () => {
   // Student checks if the appointment is cancelled
   it("should show no pending appointments for the student after cancellation", async () => {
     const res = await request(app)
-      .post("/api/student/status")
+      .post("/student/status")
       .set("Authorization", `Bearer ${studentToken}`);
     expect(res.statusCode).toBe(404);
     expect(res.body.message).toBe("All appointments are cancelled");

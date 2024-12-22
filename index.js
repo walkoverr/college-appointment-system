@@ -4,28 +4,30 @@ const dotenv = require("dotenv");
 const authRoutes = require("./routes/auth");
 const professorRoutes = require("./routes/professor");
 const studentRoutes = require("./routes/student");
-const PORT =3000;
+const app = express();
+
+//port to listen
+const PORT =3002;
+
+//access .env file
 dotenv.config();
 
-const app = express();
+//inbuilt middleware
 app.use(express.json());
 
 
+//database connection
 mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("Database connected"))
 .catch((err) => console.error("Database connection failed", err));
 
-app.get("/", (req, res) => 
-    {
-        res.send("College Appointment System API Running")
-    });
+//routes
+app.use("/auth", authRoutes);
+app.use("/professor", professorRoutes);
+app.use("/student", studentRoutes);
 
-app.use("/api/auth", authRoutes);
-app.use("/api/professor", professorRoutes);
-app.use("/api/student", studentRoutes);
-
-
-app.listen(PORT, () =>{
+//port listening
+app.listen(PORT,() =>{
     console.log(`Server running on port ${PORT}`)
 });
 

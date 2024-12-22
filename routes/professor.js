@@ -26,6 +26,10 @@ router.post("/slots", auth, async(req, res) => {
 });
 router.delete("/cancel/:appointmentId", auth, async (req, res) => 
   {
+    if (req.user.role !== "professor") 
+      {
+        return res.status(403).json({ message: "Access denied" });
+      }
   try {
     const appointment = await Appointment.findById(req.params.appointmentId);
     console.log("hello")
