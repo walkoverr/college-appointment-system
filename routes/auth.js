@@ -5,7 +5,7 @@ const User = require("../models/user");
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
-  console.log(req.body)
+  // console.log(req.body)
   const { name, email, password, role } = req.body;
   try {
     const existingUser = await User.findOne({ email });
@@ -35,7 +35,7 @@ router.post("/login", async (req, res) => {
     {
       return res.status(400).json({ message: "Invalid credentials" });
     }
-
+    
   const token = jwt.sign({ id: user._id, role: user.role }, process.env.SECRET_KEY,{expiresIn:"1h"});
   return res.status(200).json({
     message: "Login successful",
